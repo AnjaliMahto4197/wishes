@@ -16,6 +16,7 @@ export const WishCreator: React.FC = () => {
     font: 'cursive',
   });
 
+  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
   const [previewMode, setPreviewMode] = useState<'cover' | 'card' | 'interactive'>('card');
   const [resetKey, setResetKey] = useState(0); // to reset the interactive view
   const [generatedUrl, setGeneratedUrl] = useState('');
@@ -86,241 +87,287 @@ export const WishCreator: React.FC = () => {
 
   return (
     <div className="creator-layout">
-      {/* Sidebar Editor */}
-      <aside className="editor-panel">
-        <header className="editor-header">
+      {/* Top Header Navigation */}
+      <header className="creator-header">
+        <div className="header-left">
           <div className="logo-badge">🎁 Surprise Wishes</div>
-          <h1>Design a Surprise</h1>
-          <p>Create a beautiful digital card that unfolds with animations and music. Send the magic link instantly!</p>
-        </header>
-
-        <div className="editor-form">
-          <div className="form-group-row">
-            <div className="form-group">
-              <label htmlFor="wish-to">Recipient Name</label>
-              <input
-                id="wish-to"
-                type="text"
-                placeholder="e.g. Alex"
-                value={wish.to}
-                onChange={(e) => setWish({ ...wish, to: e.target.value })}
-                maxLength={30}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="wish-from">Your Name</label>
-              <input
-                id="wish-from"
-                type="text"
-                placeholder="e.g. Jordan"
-                value={wish.from}
-                onChange={(e) => setWish({ ...wish, from: e.target.value })}
-                maxLength={30}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="wish-msg">Surprise Message</label>
-            <textarea
-              id="wish-msg"
-              placeholder="Write a sweet birthday wish, a thank you note, or a loving message..."
-              value={wish.message}
-              onChange={(e) => setWish({ ...wish, message: e.target.value })}
-              maxLength={600}
-              rows={4}
-            />
-            <span className="char-counter">{wish.message.length}/600 characters</span>
-          </div>
-
-          <div className="form-group">
-            <label>Select Theme</label>
-            <div className="grid-selector themes-grid">
-              {themes.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  className={`grid-card theme-card ${wish.theme === t.id ? 'active' : ''}`}
-                  onClick={() => setWish({ ...wish, theme: t.id })}
-                >
-                  <span className="theme-color-dot" style={{ backgroundColor: t.previewColor }} />
-                  {t.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="form-group-row">
-            <div className="form-group">
-              <label>Opening Cover</label>
-              <div className="grid-selector compact">
-                {covers.map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className={`grid-card compact-card ${wish.cover === c.id ? 'active' : ''}`}
-                    onClick={() => setWish({ ...wish, cover: c.id })}
-                  >
-                    {c.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Visual Effect</label>
-              <div className="grid-selector compact">
-                {effects.map((e) => (
-                  <button
-                    key={e.id}
-                    type="button"
-                    className={`grid-card compact-card ${wish.effect === e.id ? 'active' : ''}`}
-                    onClick={() => setWish({ ...wish, effect: e.id })}
-                  >
-                    {e.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Text Typography (Font)</label>
-            <div className="grid-selector fonts-grid">
-              {fonts.map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  className={`grid-card font-card ${f.style} ${wish.font === f.id ? 'active' : ''}`}
-                  onClick={() => setWish({ ...wish, font: f.id })}
-                >
-                  {f.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button type="button" className="action-button primary-btn build-btn" onClick={handleGenerate}>
-            ✨ Generate Surprise Link
+          <span className="header-title">Creator Studio</span>
+        </div>
+        
+        <div className="header-tabs">
+          <button
+            type="button"
+            className={`header-tab ${activeTab === 'edit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('edit')}
+          >
+            ✍️ Edit Design
+          </button>
+          <button
+            type="button"
+            className={`header-tab ${activeTab === 'preview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('preview')}
+          >
+            👁️ Live Preview
           </button>
         </div>
-      </aside>
 
-      {/* Real-time Preview Area */}
-      <main className="preview-panel">
-        <div className="preview-toolbar">
-          <span className="preview-label">Live Preview</span>
-          <div className="toggle-group">
-            {wish.cover !== 'none' && (
-              <button
-                type="button"
-                className={`toggle-btn ${previewMode === 'cover' ? 'active' : ''}`}
-                onClick={() => setPreviewMode('cover')}
-              >
-                Cover
-              </button>
-            )}
-            <button
-              type="button"
-              className={`toggle-btn ${previewMode === 'card' ? 'active' : ''}`}
-              onClick={() => setPreviewMode('card')}
-            >
-              Opened Card
-            </button>
-            {wish.cover !== 'none' && (
-              <button
-                type="button"
-                className={`toggle-btn ${previewMode === 'interactive' ? 'active' : ''}`}
-                onClick={() => {
-                  setPreviewMode('interactive');
-                  handleResetPreview();
-                }}
-              >
-                Full Reveal Flow 🔄
-              </button>
-            )}
-          </div>
+        <div className="header-actions">
+          <button type="button" className="action-button primary-btn header-build-btn" onClick={handleGenerate}>
+            ✨ Generate Link
+          </button>
         </div>
+      </header>
 
-        {/* The Preview Frame */}
-        <div className={`preview-viewport ${themes.find(t => t.id === wish.theme)?.gradient}`}>
-          {/* Static Canvas Effect if previewing Card */}
-          {(previewMode === 'card' || previewMode === 'interactive') && wish.effect !== 'none' && (
-            <CanvasEffects effect={wish.effect} />
-          )}
+      <div className="creator-main-content">
+        {activeTab === 'edit' ? (
+          /* Editor Page */
+          <aside className="editor-panel">
+            <div className="editor-container">
+              <header className="editor-header">
+                <h1>Design your Surprise</h1>
+                <p>Create a beautiful digital card that unfolds with animations and music. Send the magic link instantly!</p>
+              </header>
 
-          <div className="viewport-inner" key={resetKey}>
-            {previewMode === 'cover' && (
-              <div className="preview-cover-centered">
-                {wish.cover === 'envelope' && (
-                  <EnvelopeCover
-                    to={wish.to}
-                    from={wish.from}
-                    theme={wish.theme}
-                    onOpen={() => setPreviewMode('card')}
-                  />
-                )}
-                {wish.cover === 'giftbox' && (
-                  <GiftBoxCover
-                    to={wish.to}
-                    from={wish.from}
-                    theme={wish.theme}
-                    onOpen={() => setPreviewMode('card')}
-                  />
-                )}
-              </div>
-            )}
-
-            {previewMode === 'card' && (
-              <div className="wish-card-outer">
-                <div className={`wish-card glass-card ${wish.font}`}>
-                  <div className="wish-decorations">
-                    <span className="decor-corner top-left">✨</span>
-                    <span className="decor-corner top-right">✨</span>
+              <div className="editor-form">
+                <div className="form-group-row">
+                  <div className="form-group">
+                    <label htmlFor="wish-to">Recipient Name</label>
+                    <input
+                      id="wish-to"
+                      type="text"
+                      placeholder="e.g. Alex"
+                      value={wish.to}
+                      onChange={(e) => setWish({ ...wish, to: e.target.value })}
+                      maxLength={30}
+                    />
                   </div>
-                  
-                  <div className="card-header">
-                    <p className="to-label">Dearest</p>
-                    <h2 className="to-name">{wish.to || 'Your Name'}</h2>
-                  </div>
-
-                  <div className="card-body">
-                    <p className="wish-message">
-                      {wish.message || 'Write something magical. Your surprise message will display here in real-time, matching your selected theme and styling.'}
-                    </p>
-                  </div>
-
-                  <div className="card-footer">
-                    <p className="from-label">With love from,</p>
-                    <p className="from-name">{wish.from || 'Your Name'}</p>
+                  <div className="form-group">
+                    <label htmlFor="wish-from">Your Name</label>
+                    <input
+                      id="wish-from"
+                      type="text"
+                      placeholder="e.g. Jordan"
+                      value={wish.from}
+                      onChange={(e) => setWish({ ...wish, from: e.target.value })}
+                      maxLength={30}
+                    />
                   </div>
                 </div>
-              </div>
-            )}
 
-            {previewMode === 'interactive' && (
-              <div className="preview-cover-centered">
-                {wish.cover === 'envelope' && (
-                  <EnvelopeCover
-                    to={wish.to}
-                    from={wish.from}
-                    theme={wish.theme}
-                    onOpen={() => setPreviewMode('card')}
+                <div className="form-group">
+                  <label htmlFor="wish-msg">Surprise Message</label>
+                  <textarea
+                    id="wish-msg"
+                    placeholder="Write a sweet birthday wish, a thank you note, or a loving message..."
+                    value={wish.message}
+                    onChange={(e) => setWish({ ...wish, message: e.target.value })}
+                    maxLength={600}
+                    rows={4}
                   />
+                  <span className="char-counter">{wish.message.length}/600 characters</span>
+                </div>
+
+                <div className="form-group">
+                  <label>Select Theme</label>
+                  <div className="grid-selector themes-grid">
+                    {themes.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        className={`grid-card theme-card ${wish.theme === t.id ? 'active' : ''}`}
+                        onClick={() => setWish({ ...wish, theme: t.id })}
+                      >
+                        <span className="theme-color-dot" style={{ backgroundColor: t.previewColor }} />
+                        {t.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group-row">
+                  <div className="form-group">
+                    <label>Opening Cover</label>
+                    <div className="grid-selector compact">
+                      {covers.map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          className={`grid-card compact-card ${wish.cover === c.id ? 'active' : ''}`}
+                          onClick={() => setWish({ ...wish, cover: c.id })}
+                        >
+                          {c.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Visual Effect</label>
+                    <div className="grid-selector compact">
+                      {effects.map((e) => (
+                        <button
+                          key={e.id}
+                          type="button"
+                          className={`grid-card compact-card ${wish.effect === e.id ? 'active' : ''}`}
+                          onClick={() => setWish({ ...wish, effect: e.id })}
+                        >
+                          {e.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Text Typography (Font)</label>
+                  <div className="grid-selector fonts-grid">
+                    {fonts.map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        className={`grid-card font-card ${f.style} ${wish.font === f.id ? 'active' : ''}`}
+                        onClick={() => setWish({ ...wish, font: f.id })}
+                      >
+                        {f.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="editor-footer-buttons">
+                  <button type="button" className="action-button primary-btn build-btn" onClick={handleGenerate}>
+                    ✨ Generate Surprise Link
+                  </button>
+                  <button
+                    type="button"
+                    className="action-button secondary-btn preview-btn"
+                    onClick={() => setActiveTab('preview')}
+                  >
+                    👁️ View Live Preview
+                  </button>
+                </div>
+              </div>
+            </div>
+          </aside>
+        ) : (
+          /* Real-time Preview Area */
+          <main className="preview-panel">
+            <div className="preview-toolbar">
+            
+              
+              <div className="toggle-group toolbar-center">
+                {wish.cover !== 'none' && (
+                  <button
+                    type="button"
+                    className={`toggle-btn ${previewMode === 'cover' ? 'active' : ''}`}
+                    onClick={() => setPreviewMode('cover')}
+                  >
+                    Cover
+                  </button>
                 )}
-                {wish.cover === 'giftbox' && (
-                  <GiftBoxCover
-                    to={wish.to}
-                    from={wish.from}
-                    theme={wish.theme}
-                    onOpen={() => setPreviewMode('card')}
-                  />
+                <button
+                  type="button"
+                  className={`toggle-btn ${previewMode === 'card' ? 'active' : ''}`}
+                  onClick={() => setPreviewMode('card')}
+                >
+                  Opened Card
+                </button>
+                {wish.cover !== 'none' && (
+                  <button
+                    type="button"
+                    className={`toggle-btn ${previewMode === 'interactive' ? 'active' : ''}`}
+                    onClick={() => {
+                      setPreviewMode('interactive');
+                      handleResetPreview();
+                    }}
+                  >
+                    Full Reveal Flow 🔄
+                  </button>
                 )}
               </div>
-            )}
-          </div>
-        </div>
-      </main>
+            </div>
+
+            {/* The Preview Frame */}
+            <div className={`preview-viewport ${themes.find(t => t.id === wish.theme)?.gradient}`}>
+              {/* Static Canvas Effect if previewing Card */}
+              {(previewMode === 'card' || previewMode === 'interactive') && wish.effect !== 'none' && (
+                <CanvasEffects effect={wish.effect} />
+              )}
+
+              <div className="viewport-inner" key={resetKey}>
+                {previewMode === 'cover' && (
+                  <div className="preview-cover-centered">
+                    {wish.cover === 'envelope' && (
+                      <EnvelopeCover
+                        to={wish.to}
+                        from={wish.from}
+                        theme={wish.theme}
+                        onOpen={() => setPreviewMode('card')}
+                      />
+                    )}
+                    {wish.cover === 'giftbox' && (
+                      <GiftBoxCover
+                        to={wish.to}
+                        from={wish.from}
+                        theme={wish.theme}
+                        onOpen={() => setPreviewMode('card')}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {previewMode === 'card' && (
+                  <div className="wish-card-outer">
+                    <div className={`wish-card glass-card ${wish.font}`}>
+                      <div className="wish-decorations">
+                        <span className="decor-corner top-left">✨</span>
+                        <span className="decor-corner top-right">✨</span>
+                      </div>
+                      
+                      <div className="card-header">
+                        <p className="to-label">Dearest</p>
+                        <h2 className="to-name">{wish.to || 'Your Name'}</h2>
+                      </div>
+
+                      <div className="card-body">
+                        <p className="wish-message">
+                          {wish.message || 'Write something magical. Your surprise message will display here in real-time, matching your selected theme and styling.'}
+                        </p>
+                      </div>
+
+                      <div className="card-footer">
+                        <p className="from-label">With love from,</p>
+                        <p className="from-name">{wish.from || 'Your Name'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {previewMode === 'interactive' && (
+                  <div className="preview-cover-centered">
+                    {wish.cover === 'envelope' && (
+                      <EnvelopeCover
+                        to={wish.to}
+                        from={wish.from}
+                        theme={wish.theme}
+                        onOpen={() => setPreviewMode('card')}
+                      />
+                    )}
+                    {wish.cover === 'giftbox' && (
+                      <GiftBoxCover
+                        to={wish.to}
+                        from={wish.from}
+                        theme={wish.theme}
+                        onOpen={() => setPreviewMode('card')}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+        )}
+      </div>
 
       {/* Share Modal Dialog */}
       {showShareModal && (

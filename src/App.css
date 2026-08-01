@@ -119,36 +119,151 @@ body {
 /* Creator Layout */
 .creator-layout {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   background-color: var(--bg-dark);
+  overflow: hidden;
+}
+
+/* Creator Header */
+.creator-header {
+  height: 70px;
+  background: rgba(15, 15, 19, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.header-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+}
+
+.header-tab {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-main);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.header-tab.active {
+  background: rgba(138, 43, 226, 0.12);
+  border: 1px solid rgba(138, 43, 226, 0.25);
+  color: #c084fc;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.header-build-btn {
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+}
+
+.creator-main-content {
+  flex-grow: 1;
+  display: flex;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+  position: relative;
 }
 
 /* Sidebar Editor Panel */
 .editor-panel {
-  width: 440px;
-  flex-shrink: 0;
-  background-color: #0f0f13;
-  border-right: 1px solid var(--panel-border);
-  padding: 32px 24px;
+  flex-grow: 1;
+  background-color: var(--bg-dark);
+  padding: 40px 24px;
   overflow-y: auto;
   box-sizing: border-box;
   display: flex;
+  justify-content: center;
+}
+
+.editor-container {
+  width: 100%;
+  max-width: 680px;
+  background-color: #0f0f13;
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  height: fit-content;
 }
 
 .editor-header h1 {
   font-size: 28px;
-  margin: 10px 0 6px;
+  margin: 0 0 6px;
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.5px;
 }
+
 .editor-header p {
   font-size: 14px;
   color: #94a3b8;
   line-height: 1.5;
   margin-bottom: 24px;
+}
+
+.editor-footer-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.editor-footer-buttons button {
+  flex: 1;
+}
+
+.edit-back-btn {
+  padding: 8px 16px !important;
+  font-size: 13.5px !important;
 }
 .logo-badge {
   display: inline-flex;
@@ -1100,25 +1215,63 @@ body {
 /* Media Queries & Responsive styling */
 @media (max-width: 1000px) {
   .creator-layout {
-    flex-direction: column-reverse;
-    height: auto;
-    overflow-y: auto;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .creator-header {
+    padding: 0 16px;
+    height: 64px;
+  }
+  .creator-main-content {
+    height: calc(100vh - 64px);
   }
   .editor-panel {
-    width: 100%;
-    border-right: none;
-    border-top: 1px solid var(--panel-border);
+    padding: 24px 16px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .editor-container {
     padding: 24px;
-    height: auto;
-    overflow-y: visible;
+    border-radius: 12px;
   }
   .preview-panel {
-    height: 520px;
-    flex-shrink: 0;
+    height: 100%;
     padding: 16px;
   }
   .preview-viewport {
-    height: 100%;
+    height: calc(100% - 60px);
+  }
+}
+
+@media (max-width: 600px) {
+  .header-title {
+    display: none;
+  }
+  .logo-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  .header-tab {
+    padding: 6px 12px;
+    font-size: 12.5px;
+  }
+  .header-build-btn {
+    padding: 8px 12px !important;
+    font-size: 12.5px !important;
+  }
+  .creator-header {
+    padding: 0 12px;
+    height: 60px;
+  }
+  .creator-main-content {
+    height: calc(100vh - 60px);
+  }
+  .editor-panel {
+    padding: 16px 8px;
+  }
+  .editor-container {
+    padding: 16px;
   }
 }
 
