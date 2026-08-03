@@ -162,7 +162,7 @@ export const WishCreator: React.FC = () => {
                     value={wish.message}
                     onChange={(e) => setWish({ ...wish, message: e.target.value })}
                     maxLength={1500}
-                    rows={20}
+                    rows={10}
                   />
                   <span className="char-counter">{wish.message.length}/1500 characters</span>
                 </div>
