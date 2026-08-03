@@ -288,7 +288,15 @@ export const WishCreator: React.FC = () => {
             </div>
 
             {/* The Preview Frame */}
-            <div className={`preview-viewport ${themes.find(t => t.id === wish.theme)?.gradient}`}>
+            <div 
+              className={`preview-viewport ${themes.find(t => t.id === wish.theme)?.gradient}`}
+              style={{
+                backgroundImage: `url('/image/swati%20image.jpeg')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundBlendMode: 'overlay'
+              }}
+            >
               {/* Static Canvas Effect if previewing Card */}
               {(previewMode === 'card' || previewMode === 'interactive') && wish.effect !== 'none' && (
                 <CanvasEffects effect={wish.effect} />

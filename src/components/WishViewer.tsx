@@ -37,7 +37,16 @@ export const WishViewer: React.FC<WishViewerProps> = ({ wish }) => {
   };
 
   return (
-    <div className={`viewer-container ${getThemeClass(wish.theme)}`}>
+    <div 
+      className={`viewer-container ${getThemeClass(wish.theme)}`}
+      style={{
+        backgroundImage: `url('/image/swati%20image.jpeg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
       {/* Background visual effects */}
       {isOpened && wish.effect !== 'none' && (
         <CanvasEffects effect={wish.effect} />
