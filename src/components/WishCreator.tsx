@@ -161,7 +161,7 @@ export const WishCreator: React.FC = () => {
                     placeholder="Write a sweet birthday wish, a thank you note, or a loving message..."
                     value={wish.message}
                     onChange={(e) => setWish({ ...wish, message: e.target.value })}
-                    maxLength={600}
+                    maxLength={1500}
                     rows={4}
                   />
                   <span className="char-counter">{wish.message.length}/600 characters</span>
