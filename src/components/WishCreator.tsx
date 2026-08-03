@@ -22,14 +22,30 @@ export const WishCreator: React.FC = () => {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Generate URL in real-time or when button is clicked
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     const encoded = encodeWish(wish);
-    const url = `${window.location.origin}${window.location.pathname}?w=${encoded}`;
-    setGeneratedUrl(url);
-    setShowShareModal(true);
-    setIsCopied(false);
+    const longUrl = `${window.location.origin}${window.location.pathname}?w=${encoded}`;
+    
+    setIsGenerating(true);
+    try {
+      const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
+      const data = await response.json();
+      if (data.shorturl) {
+        setGeneratedUrl(data.shorturl);
+      } else {
+        setGeneratedUrl(longUrl);
+      }
+    } catch (error) {
+      console.error('Error shortening URL:', error);
+      setGeneratedUrl(longUrl);
+    } finally {
+      setIsGenerating(false);
+      setShowShareModal(true);
+      setIsCopied(false);
+    }
   };
 
   const handleCopyLink = () => {
@@ -112,8 +128,8 @@ export const WishCreator: React.FC = () => {
         </div>
 
         <div className="header-actions">
-          <button type="button" className="action-button primary-btn header-build-btn" onClick={handleGenerate}>
-            ✨ Generate Link
+          <button type="button" className="action-button primary-btn header-build-btn" onClick={handleGenerate} disabled={isGenerating}>
+            {isGenerating ? '⏳ Generating...' : '✨ Generate Link'}
           </button>
         </div>
       </header>
@@ -235,8 +251,8 @@ export const WishCreator: React.FC = () => {
                 </div>
 
                 <div className="editor-footer-buttons">
-                  <button type="button" className="action-button primary-btn build-btn" onClick={handleGenerate}>
-                    ✨ Generate Surprise Link
+                  <button type="button" className="action-button primary-btn build-btn" onClick={handleGenerate} disabled={isGenerating}>
+                    {isGenerating ? '⏳ Generating...' : '✨ Generate Surprise Link'}
                   </button>
                   <button
                     type="button"
