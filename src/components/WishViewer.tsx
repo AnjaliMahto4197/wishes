@@ -41,8 +41,9 @@ export const WishViewer: React.FC<WishViewerProps> = ({ wish }) => {
       className={`viewer-container ${getThemeClass(wish.theme)}`}
       style={{
         backgroundImage: `url('/image/swati%20image.jpeg')`,
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
         backgroundBlendMode: 'overlay'
       }}
