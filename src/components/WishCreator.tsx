@@ -307,7 +307,7 @@ export const WishCreator: React.FC = () => {
             <div 
               className={`preview-viewport ${themes.find(t => t.id === wish.theme)?.gradient}`}
               style={{
-                backgroundImage: `url('/image/swati%20image.jpeg')`,
+                backgroundImage: `url('/image/samridhi.png')`,
                 backgroundSize: 'contain',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
